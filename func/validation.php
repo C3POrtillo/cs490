@@ -38,11 +38,12 @@
     return convert_to_json( "403", "Invalid question number." );
   }
 
-  function set_question( $q_num, $topic, $difficulty, $question, $arg_c, $arg_v, $test_c, $test_v ) {
+  function set_question($topic, $difficulty, $question, $arg_c, $arg_v, $test_c, $test_v ) {
     global $db;
     global $questionsTable;
-    $s = "INSERT INTO `490_Questions`(`q_num`, `topic`, `difficulty`, `question`, `arg_c`, `arg_v`, `test_c`, `test_v`) VALUES ('$q_num', '$topic', '$difficulty', '$question', '$arg_c', '$arg_v', '$test_c', '$test_v')";
+    $s = "INSERT INTO `490_Questions`(`topic`, `difficulty`, `question`, `arg_c`, `arg_v`, `test_c`, `test_v`) VALUES ('$topic', '$difficulty', '$question', '$arg_c', '$arg_v', '$test_c', '$test_v')";
     ( $t = mysqli_query($db, $s) ) or die ( convert_to_json( "503", "Database Error Occured" ) );
+    return convert_to_json( "200" , "Question Successfully inserted.");
   }
 
   function get_test( $t_num, $professor ) {
@@ -54,7 +55,7 @@
     while ( $r = mysqli_fetch_array ( $t, MYSQLI_ASSOC) ) {
       return convert_to_json( "200", convert_test_to_json( $r["professor"], $r["t_num"], $r["question_c"], $r["question_v"] ) );
     }
-    return convert_to_json( "403", "Invalid test or professor" );
+    return convert_to_json( "403", "Invalid test or professor." );
   }
 
   function set_test( $t_num, $professor, $question_c, $question_v ) {
@@ -62,7 +63,7 @@
     global $questionsTable;
     $s = "INSERT INTO `490_Tests`(`t_num`, `professor`, `question_c`, `question_v`) VALUES ('$t_num', '$professor', '$question_c', '$question_v')";
     ( $t = mysqli_query($db, $s) ) or die ( convert_to_json( "503", "Database Error Occured" ) );
-    return convert_to_json( "200", "Successfully added question" );
+    return convert_to_json( "200", "Successfully added question." );
   }
 
 ?>

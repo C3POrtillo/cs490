@@ -3,29 +3,75 @@
   include("../func/jsonfns.php");
   include("../func/validation.php");
 
-  // header('Content-type: application/json');
+  header('Content-type: application/json');
 
-  // $db = mysqli_connect($hostname, $username, $password, $project);
-  // if (mysqli_connect_errno()) {
-  //   echo convert_to_json("503", "Unable to connect to database");
-  //   exit();
+  $db = mysqli_connect($hostname, $username, $password, $project);
+  if (mysqli_connect_errno()) {
+    echo convert_to_json("503", "Unable to connect to database");
+    exit();
+  }
+
+  // {
+  //   "action": "addquestion",
+  //   "contents": {
+  //     "topic": "variables",
+  //     "difficulty": "0",
+  //     "question": "p",
+  //     "arg_c": 1,
+  //     "arg_v": {
+  //       "1": {
+  //         "name": "1",
+  //         "desc": "2"
+  //       }
+  //     },
+  //     "test_c": 1,
+  //     "test_v": {
+  //       "1": {
+  //         "input": "3",
+  //         "output": "4"
+  //       }
+  //     }
+  //   }
   // }
 
-  // Takes raw data from the request
   $req = $_POST["req"];
 
-  // $req = json_encode($req, JSON_UNESCAPED_SLASHES);
-  // $req = "test";
-  // Converts it into a PHP object
-  // $req = json_decode($req);
+  $json = json_decode($req);
 
-  // echo "data decoded";
-  // echo $data;
-  echo json_encode([
-    "res" => $req
-  ], JSON_UNESCAPED_SLASHES);
+  $contents = $json->contents;
+  $topic = $contents->topic;
+  $diff =  $contents->difficulty;
+  $question = $contents->question;
+  $arg_c = $contents->arg_c;
+  $arg_v = $contents->arg_v;
+  $test_c = $contents->test_c;
+  $test_v = $contents->test_v;
 
-  // echo "hello"
-  // set_question( $$form->{"q_num"}, $form->{"topic"}, $form->{"difficulty"}, $form->{"question"}, $form->{"arg_c"}, $form->{"arg_v"}, $form->{"test_c"}, $form->{"test_v"} );
+  $arg_str = "{";
+  for ($i = 1; $i <= $arg_c; $i++) {
+    $arg_str .= "\"$i\":{\"name\":\"";
+    $arg_str .= $arg_v->{"$i"}->name;
+    $arg_str .= "\",\"desc\":\"";
+    $arg_str .= $arg_v->{"$i"}->desc;
+    $arg_str .= "\"}";
+    if ($i < $arg_c) {
+      $arg_str .= ",";
+    }
+  }
+  $arg_str .= "}";
 
+  $test_str = "{";
+  for ($i = 1; $i <= $test_c; $i++) {
+    $test_str .= "\"$i\":{\"input\":\"";
+    $test_str .= $test_v->{"$i"}->input;
+    $test_str .= "\",\"output\":\"";
+    $test_str .= $test_v->{"$i"}->output;
+    $test_str .= "\"}";
+    if ($i < $test_c) {
+      $test_str .= ",";
+    }
+  }
+  $test_str .= "}";
+
+  echo set_question($topic, $diff, $question, $arg_c, $arg_str, $test_c, $test_str );
 ?>
