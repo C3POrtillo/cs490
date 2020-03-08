@@ -11,8 +11,8 @@
     exit();
   }
 
-  $username = get_data( "u" );
-  $password = get_data( "p" );
+  $u = get_data( "u" );
+  $p = get_data( "p" );
 
-  echo auth( $username, $password );
+  echo auth( $u, $p );
 ?>

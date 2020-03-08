@@ -11,11 +11,10 @@
     exit();
   }
 
-  $username = get_data( "u" );
-  $password = get_data( "p" );
-  
   // $req = json_decode( $_POST[ "req" ] );
   // $username = get_data( $req->{"u"} );
   // $password = get_data( $req->{"p"} );
-  echo auth( $username, $password );
+  $u = get_data( "u" );
+  $p = get_data( "p" );
+  echo auth( $u, $p );
 ?>
