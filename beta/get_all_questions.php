@@ -11,7 +11,5 @@
     exit();
   }
 
-  $u = get_data( "u" );
-  $p = get_data( "p" );
-  echo auth( $u, $p );
+  echo get_all_questions()
 ?>

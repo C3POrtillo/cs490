@@ -11,10 +11,51 @@
     exit();
   }
 
-  $req = json_decode( $_POST[ "req" ] );
-  $token = get_data( $req->{"login"} );
-  $form = $req->{"form-data"};
+  // {
+  //   "action": "createexam",
+  //   "contents": {
+  //     "professor": "cda23",
+  //     "t_num": "0",
+  //     "q_c": 3,
+  //     "q_v": {
+  //       "1": {
+  //         "q_num": "1",
+  //         "value": "33"
+  //       },
+  //       "2": {
+  //         "q_num": "3",
+  //         "value": "33"
+  //       },
+  //       "3": {
+  //         "q_num": "5",
+  //         "value": "34"
+  //       }
+  //     }
+  //   }
+  // }
 
-  set_test( $form->{"professor"}, $form->{"t_num"}, $form->{"question_c"}, $form->{"question_v"} );
+  $req = $_POST["req"];
 
+  $json = json_decode($req);
+
+  $contents = $json->contents;
+  $professor = $contents->professor;
+  $t_num = $contents->t_num;
+  $q_c = $contents->q_c;
+  $q_v = $contents->q_v;
+
+  $q_str = "{";
+  for ($i = 1; $i <= $q_c; $i++) {
+    $q_str .= "\"$i\":{\"q_num\":\"";
+    $q_str .= $q_v->{"$i"}->q_num;
+    $q_str .= "\",\"value\":\"";
+    $q_str .= $q_v->{"$i"}->value;
+    $q_str .= "\"}";
+    if ($i < $q_c) {
+      $q_str .= ",";
+    }
+  }
+  $q_str .= "}";
+
+  echo set_test( $t_num, $professor, $q_c, $q_str );
 ?>

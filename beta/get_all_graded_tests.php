@@ -10,8 +10,12 @@
     echo convert_to_json("503", "Unable to connect to database");
     exit();
   }
+  $req = $_POST["req"];
 
-  $u = get_data( "u" );
-  $p = get_data( "p" );
-  echo auth( $u, $p );
+  $json = json_decode($req);
+  $content = $json->contents;
+  $username = $content->username;
+  $t_num = $content->t_num;
+
+  echo get_all_graded_tests( $username, $t_num );
 ?>

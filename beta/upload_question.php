@@ -39,9 +39,12 @@
   $json = json_decode($req);
 
   $contents = $json->contents;
+  $name = mysqli_real_escape_string($db, $contents->name);
   $topic = $contents->topic;
   $diff =  $contents->difficulty;
-  $question = $contents->question;
+  $f_name = $contents->f_name;
+  $constraint = $contents->constraint;
+  $question = mysqli_real_escape_string($db, $contents->question);
   $arg_c = $contents->arg_c;
   $arg_v = $contents->arg_v;
   $test_c = $contents->test_c;
@@ -50,9 +53,9 @@
   $arg_str = "{";
   for ($i = 1; $i <= $arg_c; $i++) {
     $arg_str .= "\"$i\":{\"name\":\"";
-    $arg_str .= $arg_v->{"$i"}->name;
+    $arg_str .= urlencode($arg_v->{"$i"}->name);
     $arg_str .= "\",\"desc\":\"";
-    $arg_str .= $arg_v->{"$i"}->desc;
+    $arg_str .= urlencode($arg_v->{"$i"}->desc);
     $arg_str .= "\"}";
     if ($i < $arg_c) {
       $arg_str .= ",";
@@ -63,9 +66,9 @@
   $test_str = "{";
   for ($i = 1; $i <= $test_c; $i++) {
     $test_str .= "\"$i\":{\"input\":\"";
-    $test_str .= $test_v->{"$i"}->input;
+    $test_str .= urlencode($test_v->{"$i"}->input);
     $test_str .= "\",\"output\":\"";
-    $test_str .= $test_v->{"$i"}->output;
+    $test_str .= urlencode($test_v->{"$i"}->output);
     $test_str .= "\"}";
     if ($i < $test_c) {
       $test_str .= ",";
@@ -73,5 +76,5 @@
   }
   $test_str .= "}";
 
-  echo set_question($topic, $diff, $question, $arg_c, $arg_str, $test_c, $test_str );
+  echo set_question( $name, $topic, $diff, $f_name, $constraint, $question, $arg_c, $arg_str, $test_c, $test_str );
 ?>
